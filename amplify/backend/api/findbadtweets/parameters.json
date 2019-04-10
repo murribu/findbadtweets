@@ -1,0 +1,13 @@
+{
+    "AppSyncApiName": "findbadtweets",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authfindbadtweetscognito",
+            "Outputs.UserPoolId"
+        ]
+    },
+    "schemaGraphql": "s3://findbadtweets-20190405211340-deployment/amplify-appsync-files/schema.graphql.1554861273124",
+    "ResolverBucket": "findbadtweets-20190405211340-deployment",
+    "ResolverRootKey": "amplify-appsync-files",
+    "DeploymentTimestamp": "1554861273124"
+}
