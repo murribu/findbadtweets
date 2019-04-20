@@ -1,0 +1,9 @@
+#set( $attrs = {"email": $ctx.args.email, "updatedAt": $util.time.nowFormatted("yyyy-MM-dd HH:mm:ssZ")} )
+{
+    "version" : "2017-02-28",
+    "operation" : "PutItem",
+    "key" : {
+        "id": {"S": "$ctx.identity.cognitoIdentityId"},
+    },
+    "attributeValues" : $util.dynamodb.toMapValuesJson($attrs)
+}
