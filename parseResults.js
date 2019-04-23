@@ -28,7 +28,10 @@ while (line < lines.length && lines[line] !== "") {
   line++;
 }
 
-const configtxt = "export default " + JSON.stringify(outputs) + ";";
+const configtxt =
+  "# This is an auto generated file. Any edits will be overwritten\nexport default " +
+  JSON.stringify(outputs) +
+  ";";
 
 fs.writeFile("src/config.js", configtxt, function(err) {
   if (err) throw err;
