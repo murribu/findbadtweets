@@ -1,0 +1,16 @@
+{
+  "name": "findbadtweets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cdk-deploy-save-config": "./exports.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-murribu:murribu/findbadtweets"
+  },
+  "author": "Cory Martin",
+  "license": "ISC"
+}

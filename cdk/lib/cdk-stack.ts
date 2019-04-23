@@ -2,14 +2,13 @@ import cdk = require("@aws-cdk/cdk");
 import dynamodb = require("@aws-cdk/aws-dynamodb");
 import appsync = require("@aws-cdk/aws-appsync");
 import iam = require("@aws-cdk/aws-iam");
-import fs = require("fs");
-
 import {
   CfnUserPool,
   CfnUserPoolClient,
   CfnIdentityPool,
   CfnIdentityPoolRoleAttachment
 } from "@aws-cdk/aws-cognito";
+import fs = require("fs");
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
@@ -144,6 +143,24 @@ export class CdkStack extends cdk.Stack {
           requireUppercase: false
         }
       }
+    });
+
+    new cdk.CfnOutput(this, "userpoolid", {
+      description: "userpoolid",
+      export: "userpoolid",
+      value: userPool.userPoolId
+    });
+
+    new cdk.CfnOutput(this, "cognitoregion", {
+      description: "cognitoregion",
+      export: "cognitoregion",
+      value: "us-east-1"
+    });
+
+    new cdk.CfnOutput(this, "projectregion", {
+      description: "projectregion",
+      export: "projectregion",
+      value: "us-east-1"
     });
 
     const userPoolClient = new CfnUserPoolClient(this, "fbt_userpoolclient", {
