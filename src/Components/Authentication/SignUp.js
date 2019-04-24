@@ -76,7 +76,7 @@ class SignUp extends React.Component {
           )
         })
       );
-      this.props.onUserSignIn(
+      this.props.handleUserSignIn(
         {
           displayName: data.updateUser.displayName,
           twitterHandle: data.updateUser.twitterHandle,

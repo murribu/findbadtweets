@@ -34,15 +34,15 @@ class App extends React.Component {
     }
   };
 
-  handleUserSignIn = sub => {
-    this.setState({ sub });
+  handleUserSignIn = (sub, profile) => {
+    this.setState({ sub, profile });
   };
 
   handleUserSignOut = () => {
     Auth.signOut()
       .then(data => console.log(data))
       .catch(err => console.log("Error on SignOut", err));
-    this.setState({ sub: null });
+    this.setState({ sub: null, profile: { email: null, displayName: null } });
   };
 
   async componentDidMount() {
@@ -71,7 +71,7 @@ class App extends React.Component {
           }
         });
       }
-      this.handleUserSignIn({
+      this.handleUserSignIn(user.attributes.sub, {
         displayName: data.getMyProfile.displayName,
         email: data.getMyProfile.email
       });
@@ -84,11 +84,14 @@ class App extends React.Component {
 
   render() {
     const childProps = {
-      handleUserSignIn: this.handleUserSignIn
+      signIn: this.signIn,
+      handleUserSignOut: this.handleUserSignOut,
+      profile: this.state.profile,
+      sub: this.state.sub
     };
     return (
       <div className="App">
-        <TopNav />
+        <TopNav {...childProps} />
         <Routes childProps={childProps} />
       </div>
     );

@@ -16,10 +16,16 @@ class SignIn extends React.Component {
     return this.state.email.length > 0 && this.state.password.length > 0;
   }
 
-  handleChange = event => {
+  handleChange = e => {
     this.setState({
-      [event.target.id]: event.target.value
+      [e.target.id]: e.target.value
     });
+  };
+
+  handleSubmit = async e => {
+    e.preventDefault();
+
+    this.setState({ isLoading: true });
   };
 
   render() {

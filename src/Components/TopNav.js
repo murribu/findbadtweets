@@ -25,7 +25,15 @@ class TopNav extends React.Component {
           </Nav>
           <Form inline onSubmit={this.signOut}>
             <span className="mr-3">
-              {this.props.sub ? "Welcome " + this.props.displayName : ""}
+              {this.props.sub ? "Welcome " : ""}
+              <NavLink
+                to={
+                  "/profile/" +
+                  (this.props.sub ? this.props.sub.substring(10) : "")
+                }
+              >
+                {this.props.sub ? this.props.profile.displayName : ""}
+              </NavLink>
             </span>
             {this.props.sub ? (
               <Button type="submit" variant="primary">

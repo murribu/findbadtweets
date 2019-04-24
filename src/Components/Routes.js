@@ -8,7 +8,7 @@ import HomeComponent from "./Pages/HomeComponent";
 import AboutComponent from "./Pages/AboutComponent";
 
 const AuthRoute = ({ render: C, props: childProps, ...rest }) => {
-  return childProps.isLoggedIn ? (
+  return childProps.sub ? (
     <Route
       path="/auth"
       component={({ location }) => {
