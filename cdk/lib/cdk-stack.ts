@@ -26,6 +26,12 @@ export class CdkStack extends cdk.Stack {
       name: "fbt_api"
     });
 
+    new cdk.CfnOutput(this, "apiendpoint", {
+      description: "apiendpoint",
+      export: "apiendpoint",
+      value: api.graphQlApiGraphQlUrl
+    });
+
     const iam_ds_role = new iam.CfnRole(this, "fbt_ds_role", {
       roleName: "appsync-ds" + api.graphQlApiApiId + "-" + user_table.tableName,
       assumeRolePolicyDocument: {
@@ -142,7 +148,9 @@ export class CdkStack extends cdk.Stack {
           requireSymbols: false,
           requireUppercase: false
         }
-      }
+      },
+      usernameAttributes: ["email"],
+      autoVerifiedAttributes: ["email"]
     });
 
     new cdk.CfnOutput(this, "userpoolid", {
@@ -169,6 +177,12 @@ export class CdkStack extends cdk.Stack {
       userPoolId: userPool.userPoolId
     });
 
+    new cdk.CfnOutput(this, "webclientid", {
+      description: "webclientid",
+      export: "webclientid",
+      value: userPoolClient.userPoolClientId
+    });
+
     const identityPool = new CfnIdentityPool(this, "fbt_identitypool", {
       allowUnauthenticatedIdentities: false,
       cognitoIdentityProviders: [
@@ -177,6 +191,12 @@ export class CdkStack extends cdk.Stack {
           providerName: userPool.userPoolProviderName
         }
       ]
+    });
+
+    new cdk.CfnOutput(this, "identitypoolid", {
+      description: "identitypoolid",
+      export: "identitypoolid",
+      value: identityPool.identityPoolId
     });
 
     const iam_appsync_authrole = new iam.CfnRole(this, "fbt_appsync_authrole", {

@@ -29,7 +29,7 @@ while (line < lines.length && lines[line] !== "") {
 }
 
 const configtxt =
-  "# This is an auto generated file. Any edits will be overwritten\nexport default " +
+  "// This is an auto generated file. Any edits will be overwritten\nexport default " +
   JSON.stringify(outputs) +
   ";";
 

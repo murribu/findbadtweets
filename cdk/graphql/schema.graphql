@@ -1,6 +1,7 @@
 type User {
   user_id: String!
   email: String
+  displayName: String
 }
 
 type Query {
@@ -8,7 +9,7 @@ type Query {
 }
 
 type Mutation {
-  updateUser(email: String!): User
+  updateUser(email: String, displayName: String): User
 }
 
 schema {
