@@ -6,6 +6,7 @@ type User {
 
 type Query {
   getMyProfile: User
+  getUser(user_id: String!): User
 }
 
 type Mutation {

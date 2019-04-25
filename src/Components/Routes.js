@@ -4,8 +4,9 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import SignIn from "./Authentication/SignIn";
 import SignUp from "./Authentication/SignUp";
 
-import HomeComponent from "./Pages/HomeComponent";
 import AboutComponent from "./Pages/AboutComponent";
+import HomeComponent from "./Pages/HomeComponent";
+import ProfileComponent from "./Pages/ProfileComponent";
 
 const AuthRoute = ({ render: C, props: childProps, ...rest }) => {
   return childProps.sub ? (
@@ -43,6 +44,12 @@ const Routes = ({ childProps }) => (
       exact
       path="/about"
       render={AboutComponent}
+      props={childProps}
+    />
+    <ProppedRoute
+      exact
+      path="/profile/:id"
+      render={ProfileComponent}
       props={childProps}
     />
   </Switch>

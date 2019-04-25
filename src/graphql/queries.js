@@ -4,3 +4,9 @@ export const getMyProfile = `query GetMyProfile {
     email
   }
 }`;
+
+export const getUser = `query GetUser($user_id:String) {
+  getUser(user_id: $user_id) {
+    displayName
+  }
+}`;

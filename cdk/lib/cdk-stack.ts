@@ -139,6 +139,25 @@ export class CdkStack extends cdk.Stack {
       }
     );
 
+    const fbtGetUserResponseResolver = fs.readFileSync(
+      `${__dirname}/../graphql/resolvers/getUser.response.resolver`,
+      { encoding: "utf-8" }
+    );
+
+    const fbtGetUserRequestResolver = fs.readFileSync(
+      `${__dirname}/../graphql/resolvers/getUser.request.resolver`,
+      { encoding: "utf-8" }
+    );
+
+    new appsync.CfnResolver(this, "fbt_get_user_resolver", {
+      apiId: api.graphQlApiApiId,
+      fieldName: "getUser",
+      typeName: "Query",
+      dataSourceName: datasource.dataSourceName,
+      requestMappingTemplate: fbtGetUserRequestResolver,
+      responseMappingTemplate: fbtGetUserResponseResolver
+    });
+
     const userPool = new CfnUserPool(this, "fbtuserpool", {
       policies: {
         passwordPolicy: {
