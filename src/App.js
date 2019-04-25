@@ -24,7 +24,7 @@ Amplify.configure({
   }
 });
 
-class App extends React.Component {
+export class App extends React.Component {
   state = {
     isAuthenticating: false,
     sub: null,

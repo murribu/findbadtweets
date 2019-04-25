@@ -6,6 +6,7 @@ import SignUp from "./Authentication/SignUp";
 
 import AboutComponent from "./Pages/AboutComponent";
 import HomeComponent from "./Pages/HomeComponent";
+import NotFoundComponent from "./Pages/NotFoundComponent";
 import ProfileComponent from "./Pages/ProfileComponent";
 
 const AuthRoute = ({ render: C, props: childProps, ...rest }) => {
@@ -52,6 +53,7 @@ const Routes = ({ childProps }) => (
       render={ProfileComponent}
       props={childProps}
     />
+    <Route component={NotFoundComponent} />
   </Switch>
 );
 
