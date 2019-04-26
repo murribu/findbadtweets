@@ -36,11 +36,11 @@ class TopNav extends React.Component {
               </NavLink>
             </span>
             {this.props.sub ? (
-              <Button type="submit" variant="primary">
+              <Button className="sign-out" type="submit" variant="primary">
                 Sign Out
               </Button>
             ) : (
-              <NavLink className="nav-link" to="/auth">
+              <NavLink className="nav-link sign-in" to="/auth">
                 Sign In
               </NavLink>
             )}

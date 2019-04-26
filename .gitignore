@@ -1,3 +1,4 @@
 src/config.js
 cdkdeployresult.txt
 node_modules/
+coverage/

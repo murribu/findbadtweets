@@ -6,8 +6,3 @@ configure({ adapter: new Adapter() });
 global.mount = mount;
 global.render = render;
 global.shallow = shallow;
-
-const AuthMock = {
-  currentAuthenticatedUser: jest.fn()
-};
-global.Auth = AuthMock;

@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import Routes from "./Components/Routes";
 import TopNav from "./Components/TopNav";
 
-import Amplify, { API, Auth, graphqlOperation } from "aws-amplify";
+import Amplify from "aws-amplify";
 import config from "./config";
 
 import { getMyProfile } from "./graphql/queries";
@@ -39,47 +39,39 @@ export class App extends React.Component {
   };
 
   handleUserSignOut = () => {
-    Auth.signOut()
+    Amplify.Auth.signOut()
       .then(data => console.log(data))
       .catch(err => console.log("Error on SignOut", err));
     this.setState({ sub: null, profile: { email: null, displayName: null } });
   };
 
-  async componentDidMount() {
+  async loadUserIfLoggedIn() {
+    this.setState({
+      loadUserIfLoggedInRunCount: this.state.loadUserIfLoggedInRunCount + 1
+    });
     var user;
     try {
-      user = await Auth.currentAuthenticatedUser();
-      console.log("Auth.currentAuthenticatedUser", user);
-      var { data } = await API.graphql(graphqlOperation(getMyProfile));
+      user = await Amplify.Auth.currentAuthenticatedUser();
+      console.log("Amplify.Auth.currentAuthenticatedUser", user);
+      this.setState({ sub: user.attributes.sub });
+      var { data } = await Amplify.API.graphql(
+        Amplify.graphqlOperation(getMyProfile)
+      );
       console.log("getMyProfile", data);
-      if (!data || !data.getMyProfile) {
-        // I don't have a profile. Create one!
-        const updateProfileResponse = await API.graphql(
-          graphqlOperation(updateUser, {
-            email: user.attributes.email,
-            displayName: user.attributes.email.substring(
-              0,
-              user.attributes.email.indexOf("@")
-            )
-          })
-        );
-        data = updateProfileResponse.data;
-        this.setState({
-          profile: {
-            email: updateProfileResponse.email,
-            displayName: updateProfileResponse.displayName
-          }
-        });
+      this.setState({ getMyProfile: data });
+      if (data) {
+        this.handleUserSignIn(user.attributes.sub, data.getMyProfile);
       }
-      this.handleUserSignIn(user.attributes.sub, {
-        displayName: data.getMyProfile.displayName,
-        email: data.getMyProfile.email
-      });
     } catch (e) {
       if (e !== "not authenticated") {
         throw e;
       }
     }
+  }
+
+  componentDidMount() {
+    this.setState({ componentDidMountRan: true });
+    this.loadUserIfLoggedIn();
   }
 
   render() {
