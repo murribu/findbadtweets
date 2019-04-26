@@ -26,7 +26,6 @@ Amplify.configure({
 
 export class App extends React.Component {
   state = {
-    isAuthenticating: false,
     sub: null,
     profile: {
       email: null,
@@ -46,21 +45,33 @@ export class App extends React.Component {
   };
 
   async loadUserIfLoggedIn() {
-    this.setState({
-      loadUserIfLoggedInRunCount: this.state.loadUserIfLoggedInRunCount + 1
-    });
     var user;
     try {
       user = await Amplify.Auth.currentAuthenticatedUser();
-      console.log("Amplify.Auth.currentAuthenticatedUser", user);
       this.setState({ sub: user.attributes.sub });
       var { data } = await Amplify.API.graphql(
         Amplify.graphqlOperation(getMyProfile)
       );
-      console.log("getMyProfile", data);
-      this.setState({ getMyProfile: data });
       if (data) {
-        this.handleUserSignIn(user.attributes.sub, data.getMyProfile);
+        this.handleUserSignIn(user.attributes.sub, {
+          displayName: data.getMyProfile.displayName,
+          email: user.attributes.email
+        });
+      } else {
+        // I don't have a profile. Create one!
+        var { data } = await Amplify.API.graphql(
+          Amplify.graphqlOperation(updateUser, {
+            displayName: user.attributes.email.substring(
+              0,
+              user.attributes.email.indexOf("@")
+            ),
+            email: user.attributes.email
+          })
+        );
+        this.handleUserSignIn(user.attributes.sub, {
+          displayName: data.getMyProfile.displayName,
+          email: user.attributes.email
+        });
       }
     } catch (e) {
       if (e !== "not authenticated") {
@@ -70,7 +81,6 @@ export class App extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({ componentDidMountRan: true });
     this.loadUserIfLoggedIn();
   }
 

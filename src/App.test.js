@@ -5,6 +5,7 @@ import HomeComponent from "./Components/Pages/HomeComponent";
 import NotFoundComponent from "./Components/Pages/NotFoundComponent";
 import { App } from "./App";
 import Amplify from "aws-amplify";
+import { updateUser } from "./graphql/mutations";
 
 // test("invalid path should redirect to 404", () => {
 //   const wrapper = mount(
@@ -38,10 +39,39 @@ describe("App", () => {
   it("should load without crashing", () => {
     const wrapper = shallow(<App />);
   });
-  it("should have a sub in its state when logged in", async () => {
+  it("handleUserSignIn should set the state appropriately", async () => {
+    const sub = "ASDF-7890";
+    const email = "sseaborn@whitehouse.gov";
+    const displayName = "Sam Seaborn";
+    const app = shallow(<App />);
+    await app.instance().handleUserSignIn(sub, { email, displayName });
+
+    expect(app.state().sub).toEqual(sub);
+    expect(app.state().profile.email).toEqual(email);
+    expect(app.state().profile.displayName).toEqual(displayName);
+  });
+  it("handleUserSignOut should sign you out when signed in", async () => {
+    jest.mock("aws-amplify");
+    global.signedIn = true;
+
+    const app = shallow(<App />);
+    await app.instance().handleUserSignOut();
+
+    expect(app.state().sub).toBeNull();
+  });
+  it("handleUserSignOut should sign you out when signed out", async () => {
+    jest.mock("aws-amplify");
+    global.signedIn = false;
+
+    const app = shallow(<App />);
+    await app.instance().handleUserSignOut();
+
+    expect(app.state().sub).toBeNull();
+  });
+  it("loadUserIfLoggedIn: when logged in, should have a sub in its state", async () => {
     const app = shallow(<App />);
 
-    global.loggedIn = true;
+    global.signedIn = true;
     jest.mock("aws-amplify");
 
     await app.instance().loadUserIfLoggedIn();
@@ -49,15 +79,26 @@ describe("App", () => {
     expect(Amplify.Auth.currentAuthenticatedUser).toHaveBeenCalled();
     expect(app.state().sub).not.toBeNull();
   });
-  it("should have a null sub in its state when not logged in", async () => {
+  it("loadUserIfLoggedIn: when not logged in, should have a null sub in its state", async () => {
     jest.mock("aws-amplify");
-    global.loggedIn = false;
+    global.signedIn = false;
 
     const app = shallow(<App />);
     await app.instance().loadUserIfLoggedIn();
 
-    console.log(app.state());
     expect(Amplify.Auth.currentAuthenticatedUser).toHaveBeenCalled();
     expect(app.state().sub).toBeNull();
+  });
+  it("loadUserIfLoggedIn: when logged in and there is no profile, should create a profile and store it in state", async () => {
+    jest.mock("aws-amplify");
+    global.signedIn = true;
+
+    const app = shallow(<App />);
+    await app.instance().loadUserIfLoggedIn();
+
+    expect(Amplify.API.graphql).toHaveBeenCalledWith(updateUser);
+    expect(app.state().sub).not.toBeNull();
+    expect(app.state().profile.email).not.toBeNull();
+    expect(app.state().profile.displayName).not.toBeNull();
   });
 });
