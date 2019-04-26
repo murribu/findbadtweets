@@ -52,7 +52,8 @@ export class App extends React.Component {
       var { data } = await Amplify.API.graphql(
         Amplify.graphqlOperation(getMyProfile)
       );
-      if (data) {
+      console.log(data);
+      if (data.getMyProfile !== null) {
         this.handleUserSignIn(user.attributes.sub, {
           displayName: data.getMyProfile.displayName,
           email: user.attributes.email
@@ -69,7 +70,7 @@ export class App extends React.Component {
           })
         );
         this.handleUserSignIn(user.attributes.sub, {
-          displayName: data.getMyProfile.displayName,
+          displayName: data.updateUser.displayName,
           email: user.attributes.email
         });
       }

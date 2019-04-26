@@ -53,6 +53,7 @@ describe("App", () => {
   it("handleUserSignOut should sign you out when signed in", async () => {
     jest.mock("aws-amplify");
     global.signedIn = true;
+    global.hasProfile = true;
 
     const app = shallow(<App />);
     await app.instance().handleUserSignOut();
@@ -92,11 +93,13 @@ describe("App", () => {
   it("loadUserIfLoggedIn: when logged in and there is no profile, should create a profile and store it in state", async () => {
     jest.mock("aws-amplify");
     global.signedIn = true;
+    global.hasProfile = false;
 
     const app = shallow(<App />);
     await app.instance().loadUserIfLoggedIn();
 
     expect(Amplify.API.graphql).toHaveBeenCalledWith(updateUser);
+    expect(global.hasProfile).toBeTruthy();
     expect(app.state().sub).not.toBeNull();
     expect(app.state().profile.email).not.toBeNull();
     expect(app.state().profile.displayName).not.toBeNull();

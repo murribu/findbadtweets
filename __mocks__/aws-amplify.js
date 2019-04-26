@@ -35,7 +35,7 @@ const Amplify = {
                   }
                 }
               }
-            : { getMyProfile: { data: null } };
+            : { data: { getMyProfile: null } };
           break;
         case "UpdateUser":
           global.hasProfile = true;
