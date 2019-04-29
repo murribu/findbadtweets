@@ -2,7 +2,13 @@
 const Amplify = {
   Auth: {
     currentSession: jest.fn(() => Promise.resolve()),
-    signIn: jest.fn(() => Promise.resolve()),
+    signIn: jest.fn((email, password) => {
+      if (email === "username@example.com" && password === "password") {
+        return Promise.resolve();
+      } else {
+        return Promise.reject();
+      }
+    }),
     signOut: jest.fn(() => {
       if (global.signedIn) {
         return Promise.resolve({ data: "signed out" });
@@ -42,8 +48,8 @@ const Amplify = {
           payload = {
             data: {
               updateUser: {
-                displayName: "Danny Kincaid",
-                email: "dkincaid@nytimes.com"
+                displayName: "Danny Concannon",
+                email: "dconcannon@nytimes.com"
               }
             }
           };

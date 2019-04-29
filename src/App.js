@@ -39,7 +39,7 @@ export class App extends React.Component {
 
   handleUserSignOut = () => {
     Amplify.Auth.signOut()
-      .then(data => console.log(data))
+      .then(() => {})
       .catch(err => console.log("Error on SignOut", err));
     this.setState({ sub: null, profile: { email: null, displayName: null } });
   };
@@ -52,7 +52,6 @@ export class App extends React.Component {
       var { data } = await Amplify.API.graphql(
         Amplify.graphqlOperation(getMyProfile)
       );
-      console.log(data);
       if (data.getMyProfile !== null) {
         this.handleUserSignIn(user.attributes.sub, {
           displayName: data.getMyProfile.displayName,
@@ -88,6 +87,7 @@ export class App extends React.Component {
   render() {
     const childProps = {
       signIn: this.signIn,
+      loadUserIfLoggedIn: this.loadUserIfLoggedIn,
       handleUserSignOut: this.handleUserSignOut,
       profile: this.state.profile,
       sub: this.state.sub
