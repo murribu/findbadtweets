@@ -28,14 +28,22 @@ describe("SignIn", () => {
   });
   it("should authenticate and load user upon correct submission", async () => {
     const props = {
-      loadUserIfLoggedIn: jest.fn()
+      signIn: jest.fn()
     };
     jest.mock("aws-amplify");
     const signIn = shallow(<SignIn {...props} />);
     const instance = signIn.instance();
     instance.setState({ password: "password", email: "username@example.com" });
     await instance.handleSubmit(event);
-    expect(Amplify.Auth.signIn).toHaveBeenCalled();
-    expect(instance.props.loadUserIfLoggedIn).toHaveBeenCalled();
+    expect(instance.props.signIn).toHaveBeenCalled();
+  });
+  it("should change state when handleChange is called", () => {
+    const event = {
+      target: { id: "email", value: "mlandingham@whitehouse.gov" }
+    };
+    const signIn = shallow(<SignIn />);
+    const instance = signIn.instance();
+    instance.handleChange(event);
+    expect(instance.state.email).toEqual("mlandingham@whitehouse.gov");
   });
 });

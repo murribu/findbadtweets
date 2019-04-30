@@ -1,9 +1,9 @@
 #set( $attrs = {"updatedAt": $util.time.nowFormatted("yyyy-MM-dd HH:mm:ssZ")} )
 #if ($ctx.args.email)
-  $attrs["email"] = $ctx.args.email
+  #set( $attrs["email"] = $ctx.args.email )
 #end
 #if ($ctx.args.displayName)
-  $attrs["displayName"] = $ctx.args.displayName
+  #set( $attrs["displayName"] = $ctx.args.displayName )
 #end
 {
     "version" : "2017-02-28",

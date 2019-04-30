@@ -1,8 +1,7 @@
 import React from "react";
 import { Form } from "react-bootstrap";
-import Amplify, { Auth, API, graphqlOperation } from "aws-amplify";
+import { Auth } from "aws-amplify";
 import LoaderButton from "../LoaderButton";
-import { updateUser } from "../../graphql/mutations";
 import HandleAuthError from "./HandleAuthError";
 import "./SignIn.css";
 
@@ -62,14 +61,11 @@ class SignUp extends React.Component {
     this.setState({ isLoading: true });
 
     try {
-      var confirmResponse = await Auth.confirmSignUp(
-        this.state.email,
-        this.state.confirmationCode
-      );
-      console.log(confirmResponse);
-      this.props.loadUserIfLoggedIn();
+      await Auth.confirmSignUp(this.state.email, this.state.confirmationCode);
+      await this.props.signIn(this.state.email, this.state.password);
       this.props.history.push("/");
     } catch (e) {
+      console.log(e);
       this.setState({ errorMessage: HandleAuthError(e) });
     }
   };

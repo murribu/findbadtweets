@@ -62,7 +62,7 @@ describe("Signup Component", () => {
   });
   it("should process the submission of the confirmation code", async () => {
     const props = {
-      loadUserIfLoggedIn: jest.fn(),
+      signIn: jest.fn(),
       history: []
     };
     jest.mock("aws-amplify");
@@ -73,6 +73,6 @@ describe("Signup Component", () => {
     instance.setState({ confirmationCode: "123456" });
     expect(instance.validateConfirmationForm()).toBeTruthy();
     await instance.handleConfirmationSubmit(event);
-    expect(instance.props.loadUserIfLoggedIn).toHaveBeenCalled();
+    expect(instance.props.signIn).toHaveBeenCalled();
   });
 });

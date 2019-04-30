@@ -33,6 +33,15 @@ export class App extends React.Component {
     }
   };
 
+  signIn = async (username, password) => {
+    try {
+      await Auth.signIn(username, password);
+      await this.loadUserIfLoggedIn();
+    } catch (e) {
+      return { error: e };
+    }
+  };
+
   handleUserSignIn = (sub, profile) => {
     this.setState({ sub, profile });
   };

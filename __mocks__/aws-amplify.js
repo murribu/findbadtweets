@@ -12,6 +12,7 @@ export const Auth = {
   }),
   signIn: jest.fn((email, password) => {
     if (email === "username@example.com" && password === "password") {
+      global.signedIn = true;
       return Promise.resolve();
     } else {
       return Promise.reject();

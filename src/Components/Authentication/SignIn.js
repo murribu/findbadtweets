@@ -1,7 +1,6 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Amplify from "aws-amplify";
 import handleAuthError from "./HandleAuthError";
 
 import "./SignIn.css";
@@ -29,7 +28,7 @@ class SignIn extends React.Component {
     e.preventDefault();
     try {
       this.setState({ isLoading: true });
-      await Amplify.Auth.signIn(this.state.email, this.state.password);
+      await this.props.signIn(this.state.email, this.state.password);
       await this.props.loadUserIfLoggedIn();
     } catch (err) {
       this.setState({ errorMessage: handleAuthError(err) });

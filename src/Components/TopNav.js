@@ -5,10 +5,10 @@ import { NavLink } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 
 class TopNav extends React.Component {
-  signOut(e) {
+  signOut = e => {
     e.preventDefault();
     this.props.handleUserSignOut();
-  }
+  };
 
   render() {
     return (

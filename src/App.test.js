@@ -104,4 +104,11 @@ describe("App", () => {
     expect(app.state().profile.email).not.toBeNull();
     expect(app.state().profile.displayName).not.toBeNull();
   });
+  it("signIn: should login the user with correct credentials", async () => {
+    jest.mock("aws-amplify");
+    const app = shallow(<App />);
+    const instance = app.instance();
+    await instance.signIn("username@example.com", "password");
+    expect(instance.state.sub).toEqual("ABCD-1234");
+  });
 });
