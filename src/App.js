@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import Routes from "./Components/Routes";
 import TopNav from "./Components/TopNav";
 
-import Amplify from "aws-amplify";
+import Amplify, { graphqlOperation, Auth, API } from "aws-amplify";
 import config from "./config";
 
 import { getMyProfile } from "./graphql/queries";
@@ -38,7 +38,7 @@ export class App extends React.Component {
   };
 
   handleUserSignOut = () => {
-    Amplify.Auth.signOut()
+    Auth.signOut()
       .then(() => {})
       .catch(err => console.log("Error on SignOut", err));
     this.setState({ sub: null, profile: { email: null, displayName: null } });
@@ -47,11 +47,9 @@ export class App extends React.Component {
   async loadUserIfLoggedIn() {
     var user;
     try {
-      user = await Amplify.Auth.currentAuthenticatedUser();
+      user = await Auth.currentAuthenticatedUser();
       this.setState({ sub: user.attributes.sub });
-      var { data } = await Amplify.API.graphql(
-        Amplify.graphqlOperation(getMyProfile)
-      );
+      var { data } = await API.graphql(graphqlOperation(getMyProfile));
       if (data.getMyProfile !== null) {
         this.handleUserSignIn(user.attributes.sub, {
           displayName: data.getMyProfile.displayName,
@@ -59,8 +57,8 @@ export class App extends React.Component {
         });
       } else {
         // I don't have a profile. Create one!
-        var { data } = await Amplify.API.graphql(
-          Amplify.graphqlOperation(updateUser, {
+        var { data } = await API.graphql(
+          graphqlOperation(updateUser, {
             displayName: user.attributes.email.substring(
               0,
               user.attributes.email.indexOf("@")

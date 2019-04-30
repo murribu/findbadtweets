@@ -28,8 +28,7 @@ describe("SignIn", () => {
   });
   it("should authenticate and load user upon correct submission", async () => {
     const props = {
-      loadUserIfLoggedIn: jest.fn(),
-      foo: "bar"
+      loadUserIfLoggedIn: jest.fn()
     };
     jest.mock("aws-amplify");
     const signIn = shallow(<SignIn {...props} />);
@@ -37,6 +36,6 @@ describe("SignIn", () => {
     instance.setState({ password: "password", email: "username@example.com" });
     await instance.handleSubmit(event);
     expect(Amplify.Auth.signIn).toHaveBeenCalled();
-    expect(instance.props["loadUserIfLoggedIn"]).toHaveBeenCalled();
+    expect(instance.props.loadUserIfLoggedIn).toHaveBeenCalled();
   });
 });

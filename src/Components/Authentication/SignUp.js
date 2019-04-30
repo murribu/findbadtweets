@@ -1,8 +1,9 @@
 import React from "react";
 import { Form } from "react-bootstrap";
-import { API, Auth, graphqlOperation } from "aws-amplify";
+import Amplify, { Auth, API, graphqlOperation } from "aws-amplify";
 import LoaderButton from "../LoaderButton";
 import { updateUser } from "../../graphql/mutations";
+import HandleAuthError from "./HandleAuthError";
 import "./SignIn.css";
 
 class SignUp extends React.Component {
@@ -12,7 +13,8 @@ class SignUp extends React.Component {
     password: "",
     confirmPassword: "",
     confirmationCode: "",
-    newUser: null
+    newUser: null,
+    errorMessage: ""
   };
 
   validateForm() {
@@ -46,8 +48,9 @@ class SignUp extends React.Component {
       this.setState({
         newUser
       });
+      this.setState({ errorMessage: "" });
     } catch (e) {
-      alert(e.message);
+      this.setState({ errorMessage: HandleAuthError(e) });
     }
 
     this.setState({ isLoading: false });
@@ -64,30 +67,10 @@ class SignUp extends React.Component {
         this.state.confirmationCode
       );
       console.log(confirmResponse);
-      var signInResponse = await Auth.signIn(
-        this.state.email,
-        this.state.password
-      );
-      var { data } = await API.graphql(
-        graphqlOperation(updateUser, {
-          displayName: this.state.email.substring(
-            0,
-            this.state.email.indexOf("@")
-          )
-        })
-      );
-      this.props.handleUserSignIn(
-        {
-          displayName: data.updateUser.displayName,
-          twitterHandle: data.updateUser.twitterHandle,
-          facebookHandle: data.updateUser.facebookHandle
-        },
-        signInResponse.signInUserSession.accessToken.payload.sub
-      );
+      this.props.loadUserIfLoggedIn();
       this.props.history.push("/");
     } catch (e) {
-      alert(e.message);
-      this.setState({ isLoading: false });
+      this.setState({ errorMessage: HandleAuthError(e) });
     }
   };
 
@@ -145,6 +128,13 @@ class SignUp extends React.Component {
             type="password"
           />
         </Form.Group>
+        {this.state.errorMessage !== "" ? (
+          <div className="text-danger">
+            <p>{this.state.errorMessage}</p>
+          </div>
+        ) : (
+          ""
+        )}
         <LoaderButton
           block
           bs-size="large"
