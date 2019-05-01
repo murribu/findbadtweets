@@ -64,6 +64,16 @@ export const API = {
             }
           }
         };
+        break;
+      case "GetUser":
+        payload = {
+          data: {
+            getUser: {
+              displayName: "Leo Mcgarry"
+            }
+          }
+        };
+        break;
     }
     return Promise.resolve(payload);
   })

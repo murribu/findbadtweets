@@ -1,31 +1,50 @@
 import React from "react";
 import { API, graphqlOperation } from "aws-amplify";
-import { getMyProfile, getUser, getUserPicks } from "../../graphql/queries";
+import { getUser } from "../../graphql/queries";
 
 class ProfileComponent extends React.Component {
   state = {
     profile: {
-      displayName: null
+      displayName: null,
+      email: null
     },
     serverProfile: {
-      displayName: null
+      displayName: null,
+      email: null
     },
     loading_profile: false
   };
 
   componentDidMount() {
-    if (
-      this.props &&
-      this.props.sub &&
-      this.props.match.params.id !== this.props.sub.substring(10)
-    ) {
-      this.getProfile();
-    }
+    this.getProfile();
   }
 
   async getProfile() {
+    if (this.props && this.props.sub && this.props.match) {
+      if (this.props.match.params.id === this.props.sub.substring(10)) {
+        // me!
+        this.setState({
+          profile: { ...this.props.profile },
+          serverProfile: { ...this.props.profile }
+        });
+      } else {
+        this.setState({ loading_profile: true });
+        try {
+          var { data } = await API.graphql(
+            graphqlOperation(getUser, { user_id: this.props.sub.substring(10) })
+          );
+          this.setState({
+            profile: { ...data.getUser },
+            serverProfile: { ...data.getUser }
+          });
+        } catch (e) {
+          console.log(e);
+        } finally {
+          this.setState({ loading_profile: false });
+        }
+      }
+    }
     if (this.props && this.props.match && this.props.match.params) {
-      var response = await API.graphql(graphqlOperation(getUser, {}));
     }
   }
 
